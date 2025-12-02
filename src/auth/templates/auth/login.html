@@ -1,0 +1,20 @@
+{% extends "auth/base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="mx-auto dt-auth-main">
+    <div class="card dt-auth-login">
+        <header><h2>Login</h2></header>
+        <section>
+            <form method="POST" action="{{ url_for('auth.login', next=request.args.get('next')) }}" novalidate>
+                {{ form.csrf_token }}
+                {% for message in get_flashed_messages() %}
+                <span class="dt-auth-flash">{{ message }}</span>
+                {% endfor %}
+                {{ form.email(class="form-control dt-auth-input", placeholder="Email") }}
+                {{ form.password(class="form-control dt-auth-input", placeholder="Password") }}
+                {{ form.submit(class="btn btn-md btn-primary d-block dt-auth-btn") }}
+            </form>
+        </section>
+    </div>
+</div>
+{% endblock %}
