@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from flask_security import Security, SQLAlchemyUserDatastore
+from flask_security.models import fsqla_v3
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
 
@@ -9,6 +11,7 @@ from src.config.config import config
 db = SQLAlchemy()
 migrate = Migrate()
 csrf = CSRFProtect()
+security = Security()
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"  # TODO: 미로그인 상태로 접근제한 페이지에 접속시 리다이렉트 할 엔드포인트
 login_manager.login_message = ""
@@ -24,15 +27,23 @@ def create_app(env: str = "development"):
 
     db.init_app(app)
     migrate.init_app(app, db)
+    fsqla_v3.FsModels.set_db_info(db)
+
+    from src.domains.auth.models import Role
+    from src.domains.user.models import User
+
+    user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+    security.init_app(app, user_datastore)
     csrf.init_app(app)
     login_manager.init_app(app)
 
-    from src.root.views import root_views
-    from src.user.views import user_views
-    from src.auth.views import auth_views
+    from src.domains.root.views import root_views
+
+    # from src.domains.user.views import user_views
+    # from src.domains.auth.views import auth_views
 
     app.register_blueprint(root_views, url_prefix="/")
-    app.register_blueprint(user_views, url_prefix="/user")
-    app.register_blueprint(auth_views, url_prefix="/auth")
+    # app.register_blueprint(user_views, url_prefix="/user")
+    # app.register_blueprint(auth_views, url_prefix="/auth")
 
     return app

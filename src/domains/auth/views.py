@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, flash, url_for, request
 from flask_login import login_user, logout_user
 from werkzeug.utils import redirect
 
-from src.auth.forms import LoginForm
-from src.user.models import User
+from src.domains.auth.forms import LoginForm
+from src.domains.user.models import User
 
 auth_views = Blueprint(
     "auth", __name__, template_folder="templates", static_folder="static"
