@@ -15,7 +15,7 @@ migrate = Migrate()
 csrf = CSRFProtect()
 security = Security()
 login_manager = LoginManager()
-login_manager.login_view = "auth.login"  # TODO: 미로그인 상태로 접근제한 페이지에 접속시 리다이렉트 할 엔드포인트
+login_manager.login_view = "auth.login"
 login_manager.login_message = ""
 
 
@@ -44,18 +44,21 @@ def create_app(env: str = "development"):
     # from src.domains.user.views import user_views
     # from src.domains.auth.views import auth_views
     from src.domains.file.views import file_views
+    from src.domains.detect.views import detect_views
 
     app.register_blueprint(root_views, url_prefix="/")
     # app.register_blueprint(user_views, url_prefix="/user")
     # app.register_blueprint(auth_views, url_prefix="/auth")
     app.register_blueprint(file_views, url_prefix="/file")
+    app.register_blueprint(detect_views, url_prefix="/detect")
 
-    init_upload_folder(app)
+    init_folder(app, "UPLOAD_FOLDER")
+    init_folder(app, "MODELS_FOLDER")
 
     return app
 
 
-def init_upload_folder(app: Flask):
-    upload_folder = app.config["UPLOAD_FOLDER"]
+def init_folder(app: Flask, config_name: str):
+    upload_folder = app.config[config_name]
     if not os.path.isdir(upload_folder):
         os.makedirs(upload_folder)
