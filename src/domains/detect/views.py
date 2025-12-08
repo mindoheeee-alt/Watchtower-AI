@@ -19,13 +19,11 @@ detect_views = Blueprint(
 
 @detect_views.get("/images/<path:filename>")
 def images(filename):
-    print(f"images: {current_app.config["UPLOAD_FOLDER"]}/{filename}")
     return send_from_directory(current_app.config["UPLOAD_FOLDER"], filename)
 
 
 @detect_views.route("/images", methods=["GET", "POST"])
 def detect_images():
-    print("ㅁㄹㄴㅁㄹ")
     form = UploadImageForm()
     if form.validate_on_submit():
 
@@ -54,8 +52,6 @@ def detect_images():
             current_app.config["UPLOAD_FOLDER"], detect_file_name + ext
         )
         results[0].save(filename=detect_image_path)  # save to disk
-
-        print(f"{detect_file_name} / {detect_image_path}")
 
         return jsonify({"filename": detect_file_name + ext})
     return render_template("detect/detect_images.html", form=form)
