@@ -31,4 +31,9 @@ class UploadVideoForm(FlaskForm):
             FileAllowed(["mp4", "avi", "mkv"], "지원하지 않는 파일입니다."),
         ]
     )
+    model = SelectField(
+        "모델 선택",
+        choices=[(de.value, de.name) for de in DetectorEnum],
+        default=DetectorEnum.FireDetectV1,
+    )
     submit = SubmitField("Upload")
