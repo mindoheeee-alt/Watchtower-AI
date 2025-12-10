@@ -72,6 +72,13 @@ def video_dashboard():
     return render_template("detect/video_dashboard.html", user_videos=user_videos)
 
 
+@detect_views.get("/videos/<path:filename>")
+def videos(filename: str):
+    return send_from_directory(
+        Path(current_app.config["UPLOAD_FOLDER"], "videos"), filename
+    )
+
+
 @detect_views.route("/upload/videos", methods=["GET", "POST"])
 @login_required
 def upload_video():
@@ -93,6 +100,13 @@ def upload_video():
 
         return redirect(url_for("detect.video_dashboard"))
     return render_template("detect/upload_videos.html", form=form)
+
+
+@detect_views.route("/videos/detect/<int:video_id>")
+def detect_videos(video_id: int):
+    user_video: UserVideo = db.get_or_404(UserVideo, video_id)
+
+    return render_template("detect/video_detail.html", user_video=user_video)
 
 
 # @detect_views.route("/images", methods=["GET", "POST"])
