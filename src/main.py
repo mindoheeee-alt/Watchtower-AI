@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from celery import Celery, Task
 from flask import Flask
@@ -60,9 +61,14 @@ def create_app(env: str = "development") -> Flask:
 
 
 def init_folder(app: Flask, config_name: str):
-    upload_folder = app.config[config_name]
+    upload_folder = Path(app.config[config_name])
+
     if not os.path.isdir(upload_folder):
         os.makedirs(upload_folder)
+    if not os.path.isdir(upload_folder / "images"):
+        os.makedirs(upload_folder / "images")
+    if not os.path.isdir(upload_folder / "videos"):
+        os.makedirs(upload_folder / "videos")
 
 
 def celery_init_app(app: Flask) -> Celery:
