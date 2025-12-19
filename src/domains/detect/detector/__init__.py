@@ -1,4 +1,4 @@
-from typing import Dict, Type
+from enum import Enum
 
 from src.domains.detect.detector.image_detector import (
     BaseImageDetector,
@@ -11,7 +11,6 @@ from src.domains.detect.detector.video_detector import (
     VideoDetectorYolo11n,
     VideoDetectorShoulderStop,
 )
-from enum import Enum
 
 
 class ImageDetectorEnum(Enum):
